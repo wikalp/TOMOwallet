@@ -1,4 +1,4 @@
-apply plugin: 'cipher.so'
+//apply plugin: 'cipher.so'
 
 apply plugin: 'com.android.application'
 
@@ -26,13 +26,13 @@ android {
     }
 }
 
-cipher.so {
+/*cipher.so {
     keys {
         wallet {
             value = 'tomocoin-tomochain-tomoapp'
         }
     }
-}
+}*/
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])

@@ -54,8 +54,11 @@ public class CreateWalletActivity extends BaseActivity implements CreateWalletCo
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_wallet);
         ButterKnife.bind(this);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setIcon(R.drawable.ic_keyboard_arrow_left);
         mPresenter = new CreateWalletPresenter(this);
-        mPresenter.init();
+        //mPresenter.init();
     }
 
     @Override

@@ -9,7 +9,6 @@ import com.tomoapp.tomowallet.base.MainApplication;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.helper.wallet.WalletHelper;
 
-import net.idik.lib.cipher.so.CipherClient;
 
 /**
  * Created by macbook on 12/21/17.
@@ -17,8 +16,9 @@ import net.idik.lib.cipher.so.CipherClient;
 
 public class WalletRepository implements WalletDataSource {
     WalletHelper walletHelper;
-
+    private Context context;
     public WalletRepository(Context context) {
+        this.context = context;
         this.walletHelper = new WalletHelper(context);
     }
 
@@ -54,12 +54,12 @@ public class WalletRepository implements WalletDataSource {
         try{
             String privateKey = wallet.getPrivateKey();
             String address = wallet.getAddress();
-            String cipher = CipherClient.wallet();
+            String cipher = "ABC-DEF";
             String encryptedPrivateKey = AESCrypt.encrypt(cipher, privateKey);
             String encryptedAddress = AESCrypt.encrypt(cipher, address);
             String finalEncrypted = AESCrypt.encrypt(cipher, encryptedAddress + cipher + encryptedPrivateKey);
             SharedPreferences preferences
-                    = MainApplication.get().getSharedPreferences("data", Context.MODE_PRIVATE);
+                    = context.getSharedPreferences("data", Context.MODE_PRIVATE);
             preferences.edit().putString("storage-data",finalEncrypted).apply();
         }catch (Exception e){
             LogUtil.e(e);
@@ -70,11 +70,11 @@ public class WalletRepository implements WalletDataSource {
     @Override
     public String getPrivateKey() {
         try {
-            String encryptedString = MainApplication.get().getSharedPreferences("data", Context.MODE_PRIVATE)
+            String encryptedString = context.getSharedPreferences("data", Context.MODE_PRIVATE)
                     .getString("storage-data","");
             if (encryptedString.isEmpty())
                 return "";
-            String cipher = CipherClient.wallet();
+            String cipher = "ABC-DEF";
             String tmp1 = AESCrypt.decrypt(cipher, encryptedString);
             String tmp2 = tmp1.split(cipher)[1];
             return AESCrypt.decrypt(cipher, tmp2);
@@ -87,11 +87,11 @@ public class WalletRepository implements WalletDataSource {
     @Override
     public String getAddress() {
         try {
-            String encryptedString = MainApplication.get().getSharedPreferences("data", Context.MODE_PRIVATE)
+            String encryptedString = context.getSharedPreferences("data", Context.MODE_PRIVATE)
                     .getString("storage-data","");
             if (encryptedString.isEmpty())
                 return "";
-            String cipher = CipherClient.wallet();
+            String cipher = "ABC-DEF";
             String tmp1 = AESCrypt.decrypt(cipher, encryptedString);
             String tmp2 = tmp1.split(cipher)[0];
             return AESCrypt.decrypt(cipher, tmp2);
