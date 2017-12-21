@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">TOMO Wallet</string>
+    <string name="blank">This is blank!</string>
+    <string name="next">Next</string>
+    <string name="construct_1">TOMO wallet will create your unique Mnemonic pharse containing 12 unique words. This pharse is use to recover your wallet, so please keep it safely.</string>
+    <string name="your_mnemonic">Your Mnemonic</string>
+    <string name="your_address">Your wallet address</string>
+    <string name="your_private_key">Your private key</string>
+    <string name="done">done</string>
+    <string name="creating_your_wallet">Creating your wallet...</string>
+    <string name="error">Error</string>
+    <string name="close">Close</string>
+    <string name="dacoloixayra">There was an Error!</string>
+</resources>
