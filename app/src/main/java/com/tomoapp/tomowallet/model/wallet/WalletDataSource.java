@@ -18,4 +18,6 @@ public interface WalletDataSource {
     void saveWallet(Wallet wallet);
     String getPrivateKey();
     String getAddress();
+    String getMnemonic();
+    void deleteWallet();
 }

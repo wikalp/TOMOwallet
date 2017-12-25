@@ -54,10 +54,12 @@ public class WalletRepository implements WalletDataSource {
         try{
             String privateKey = wallet.getPrivateKey();
             String address = wallet.getAddress();
+            String mnemonic = wallet.getMnemonic();
             String cipher = "ABC-DEF";
+            String encryptedMnemonic = AESCrypt.encrypt(cipher, mnemonic);
             String encryptedPrivateKey = AESCrypt.encrypt(cipher, privateKey);
             String encryptedAddress = AESCrypt.encrypt(cipher, address);
-            String finalEncrypted = AESCrypt.encrypt(cipher, encryptedAddress + cipher + encryptedPrivateKey);
+            String finalEncrypted = AESCrypt.encrypt(cipher, encryptedMnemonic + cipher + encryptedAddress + cipher + encryptedPrivateKey);
             SharedPreferences preferences
                     = context.getSharedPreferences("data", Context.MODE_PRIVATE);
             preferences.edit().putString("storage-data",finalEncrypted).apply();
@@ -76,7 +78,24 @@ public class WalletRepository implements WalletDataSource {
                 return "";
             String cipher = "ABC-DEF";
             String tmp1 = AESCrypt.decrypt(cipher, encryptedString);
-            String tmp2 = tmp1.split(cipher)[1];
+            String tmp2 = tmp1.split(cipher)[2];
+            return AESCrypt.decrypt(cipher, tmp2);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return "";
+        }
+    }
+
+    @Override
+    public String getMnemonic() {
+        try {
+            String encryptedString = context.getSharedPreferences("data", Context.MODE_PRIVATE)
+                    .getString("storage-data","");
+            if (encryptedString.isEmpty())
+                return "";
+            String cipher = "ABC-DEF";
+            String tmp1 = AESCrypt.decrypt(cipher, encryptedString);
+            String tmp2 = tmp1.split(cipher)[0];
             return AESCrypt.decrypt(cipher, tmp2);
         } catch (Exception e) {
             e.printStackTrace();
@@ -93,11 +112,23 @@ public class WalletRepository implements WalletDataSource {
                 return "";
             String cipher = "ABC-DEF";
             String tmp1 = AESCrypt.decrypt(cipher, encryptedString);
-            String tmp2 = tmp1.split(cipher)[0];
+            String tmp2 = tmp1.split(cipher)[1];
             return AESCrypt.decrypt(cipher, tmp2);
         } catch (Exception e) {
             e.printStackTrace();
             return "";
+        }
+    }
+
+
+    @Override
+    public void deleteWallet() {
+        try {
+            SharedPreferences preferences
+                    = context.getSharedPreferences("data", Context.MODE_PRIVATE);
+            preferences.edit().clear().apply();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 }

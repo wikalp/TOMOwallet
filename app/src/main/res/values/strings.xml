@@ -11,4 +11,18 @@
     <string name="error">Error</string>
     <string name="close">Close</string>
     <string name="dacoloixayra">There was an Error!</string>
+    <string name="create_wallet">Cretate new wallet</string>
+    <string name="your_wallet">Your wallet</string>
+    <string name="mine_tmc">Mine TMC</string>
+    <string name="you_have_total">You have total:</string>
+    <string name="tmc">TMC</string>
+    <string name="mining">mining</string>
+    <string name="ok">Ok</string>
+    <string name="view_your_address">Show wallet address</string>
+    <string name="view_your_mnemonic">Show mnemonic</string>
+    <string name="delete_your_wallet">Delete your wallet</string>
+    <string name="wallet_deleted">Wallet deleted!</string>
+    <string name="be_careful">Be careful!</string>
+    <string name="delete_wallet_mess">You are about to permanently delete your wallet, and your wallet can not be restored. Do you want to continue?</string>
+    <string name="delete">Delete</string>
 </resources>

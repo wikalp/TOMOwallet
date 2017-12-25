@@ -66,7 +66,7 @@ public class WalletHelper {
             jsString += "var key = hdkey.fromMasterSeed(bip39.mnemonicToSeed(mnemonic));";
             jsString += "var wallet = key.derivePath(\"m/44'/60'/0'/0/0\").getWallet();";
             jsString += "jsEvaluatorResult += mnemonic + '<split-here>';";
-            jsString += "jsEvaluatorResult += wallet.getAddress().toString('hex') + '<split-here>';";
+            jsString += "jsEvaluatorResult += '0x'+ wallet.getAddress().toString('hex') + '<split-here>';";
             jsString += "jsEvaluatorResult += wallet.getPrivateKey().toString('hex');";
             jsString += "jsEvaluatorResult;";
             mJsEvaluator.evaluate(jsString, new JsCallback() {
@@ -106,7 +106,7 @@ public class WalletHelper {
             jsString += loadJs();
             jsString += "var key = hdkey.fromMasterSeed(bip39.mnemonicToSeed("+mnemonic+"));";
             jsString += "var wallet = key.derivePath(\"m/44'/60'/0'/0/0\").getWallet();";
-            jsString += "jsEvaluatorResult += wallet.getAddress().toString('hex') + '<split-here>';";
+            jsString += "jsEvaluatorResult += '0x'+ wallet.getAddress().toString('hex') + '<split-here>';";
             jsString += "jsEvaluatorResult += wallet.getPrivateKey().toString('hex');";
             jsString += "jsEvaluatorResult;";
             mJsEvaluator.evaluate(jsString,  new JsCallback() {

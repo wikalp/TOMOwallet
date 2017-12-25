@@ -19,13 +19,13 @@ public class SplashPresenter implements SplashContract.Presenter {
 
     @Override
     public void init() {
-        mView.goToCreateWallet();
-        /*String walletAddress = mWallet.getAddress();
+
+        String walletAddress = mWallet.getAddress();
         if (walletAddress.isEmpty()){
-            mView.goToCreateWallet();
+            //mView.goToCreateWallet();
         }else {
             mView.goToMain();
-        }*/
+        }
     }
 
     @Override

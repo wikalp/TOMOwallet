@@ -5,8 +5,9 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.AppCompatButton;
-import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -30,10 +31,10 @@ import butterknife.OnClick;
 public class CreateWalletActivity extends BaseActivity implements CreateWalletContract.View {
 
 
-    @BindView(R.id.txt_title)
-    TextView txtTitle;
+    @BindView(R.id.btn_back)
+    ImageView btnBack;
     @BindView(R.id.toolbar)
-    Toolbar toolbar;
+    LinearLayout toolbar;
     @BindView(R.id.loading_view)
     LinearLayout loadingView;
     @BindView(R.id.txt_mnemonic)
@@ -46,19 +47,17 @@ public class CreateWalletActivity extends BaseActivity implements CreateWalletCo
     ScrollView scrollView;
     @BindView(R.id.btn_next)
     AppCompatButton btnNext;
-
     private CreateWalletPresenter mPresenter;
     private boolean isOnCreating;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_wallet);
         ButterKnife.bind(this);
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setIcon(R.drawable.ic_keyboard_arrow_left);
+        setStatusbarDefaultColor();
         mPresenter = new CreateWalletPresenter(this);
-        //mPresenter.init();
+        mPresenter.init();
     }
 
     @Override
@@ -119,8 +118,17 @@ public class CreateWalletActivity extends BaseActivity implements CreateWalletCo
                 .show();
     }
 
-    @OnClick(R.id.btn_next)
-    public void onViewClicked() {
-        onDone();
+
+
+    @OnClick({R.id.btn_back, R.id.btn_next})
+    public void onViewClicked(View view) {
+        switch (view.getId()) {
+            case R.id.btn_back:
+                onBack();
+                break;
+            case R.id.btn_next:
+                onDone();
+                break;
+        }
     }
 }
