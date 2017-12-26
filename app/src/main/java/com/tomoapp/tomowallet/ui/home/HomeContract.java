@@ -4,6 +4,8 @@ import android.content.Context;
 
 import com.tomoapp.tomowallet.model.userInfo.pojo.UserInfo;
 import com.tomoapp.tomowallet.model.wallet.Wallet;
+import com.tomoapp.tomowallet.model.walletActionResponse.CashActionResponse;
+import com.tomoapp.tomowallet.model.walletActionResponse.RewardResponse;
 
 
 /**
@@ -16,11 +18,15 @@ public interface HomeContract {
         Context getContext();
 
         void setUserInfo(UserInfo userInfo);
-        void onRewarded(String value);
+        void onRewarded(RewardResponse rewardResponse);
+        void onCashing();
+        void onCashed(CashActionResponse cashActionResponse);
+        void onCashFail(String reason);
         void onRewarding();
         void onShowAddress();
         void onShowMenu();
         void onWalletDeleted();
+
     }
 
 
@@ -32,7 +38,8 @@ public interface HomeContract {
         void refreshUserInfo();
         String getWalletAddress();
         String getMnemonic();
-
+        void onCashIn(double value);
+        void onCashOut(double value);
 
     }
 }

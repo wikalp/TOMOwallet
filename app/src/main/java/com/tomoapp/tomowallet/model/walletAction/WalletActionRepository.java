@@ -45,7 +45,7 @@ public class WalletActionRepository implements WalletActionDataSource {
     }
 
     @Override
-    public void cashIn(float value, final ActionExecuteListener callback) {
+    public void cashIn(double value, final ActionExecuteListener callback) {
         mAPI.cashIn(mWallet.getAddress(), value)
                 .enqueue(new Callback<JSONObject>() {
                     @Override
@@ -62,7 +62,7 @@ public class WalletActionRepository implements WalletActionDataSource {
     }
 
     @Override
-    public void cashOut(float value, final ActionExecuteListener callback) {
+    public void cashOut(double value, final ActionExecuteListener callback) {
         mAPI.cashOut(mWallet.getAddress(), value)
                 .enqueue(new Callback<JSONObject>() {
                     @Override

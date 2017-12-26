@@ -2,14 +2,18 @@ package com.tomoapp.tomowallet.ui.splash;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.Button;
 
+import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.tomoapp.tomowallet.R;
 import com.tomoapp.tomowallet.base.BaseActivity;
 import com.tomoapp.tomowallet.ui.createWallet.CreateWalletActivity;
 import com.tomoapp.tomowallet.ui.home.HomeActivity;
+
+import java.io.File;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -30,6 +34,7 @@ public class SplashActivity extends BaseActivity implements SplashContract.View 
         setContentView(R.layout.activity_splash);
         ButterKnife.bind(this);
         this.mPresenter = new SplashPresenter(this);
+
         mPresenter.init();
     }
 

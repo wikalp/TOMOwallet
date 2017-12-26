@@ -11,6 +11,6 @@ public interface WalletActionDataSource {
 
 
     void performReward(ActionExecuteListener callback);
-    void cashIn(float value, ActionExecuteListener callback);
-    void cashOut(float value, ActionExecuteListener callback);
+    void cashIn(double value, ActionExecuteListener callback);
+    void cashOut(double value, ActionExecuteListener callback);
 }

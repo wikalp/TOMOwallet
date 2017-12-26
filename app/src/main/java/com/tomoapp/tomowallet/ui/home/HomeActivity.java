@@ -14,13 +14,20 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.airbnb.lottie.LottieAnimationView;
+import com.jaychang.srv.SimpleRecyclerView;
 import com.tomoapp.tomowallet.R;
 import com.tomoapp.tomowallet.base.BaseActivity;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.helper.ToastUtil;
+import com.tomoapp.tomowallet.model.userInfo.pojo.Log;
 import com.tomoapp.tomowallet.model.userInfo.pojo.UserInfo;
 import com.tomoapp.tomowallet.model.wallet.WalletDataSource;
 import com.tomoapp.tomowallet.model.wallet.WalletRepository;
+import com.tomoapp.tomowallet.model.walletActionResponse.CashActionResponse;
+import com.tomoapp.tomowallet.model.walletActionResponse.RewardResponse;
+import com.tomoapp.tomowallet.ui.home.cell.HeaderCell;
+import com.tomoapp.tomowallet.ui.home.cell.LogCell;
 import com.tomoapp.tomowallet.ui.splash.SplashActivity;
 
 import java.util.Locale;
@@ -33,7 +40,7 @@ import butterknife.OnClick;
  * Created by macbook on 12/21/17.
  */
 
-public class HomeActivity extends BaseActivity implements HomeContract.View , HomeMenuFragment.OnMenuClickListener{
+public class HomeActivity extends BaseActivity implements HomeContract.View, HomeMenuFragment.OnMenuClickListener, HeaderCell.HeaderCellItemClickListener {
 
 
     @BindView(R.id.txt_label)
@@ -43,7 +50,7 @@ public class HomeActivity extends BaseActivity implements HomeContract.View , Ho
     @BindView(R.id.txt_mine_label)
     TextView txtMineLabel;
     @BindView(R.id.progress_mining)
-    ProgressBar progressMining;
+    LottieAnimationView progressMining;
     @BindView(R.id.btn_mine)
     LinearLayout btnMine;
     @BindView(R.id.label_2)
@@ -54,9 +61,13 @@ public class HomeActivity extends BaseActivity implements HomeContract.View , Ho
     ConstraintLayout layoutHeader;
     @BindView(R.id.txt_wallet_address)
     TextView txtWalletAddress;
+    @BindView(R.id.recycler_view)
+    SimpleRecyclerView recyclerView;
     private HomeContract.Presenter mPresenter;
     private WalletDataSource wallet = new WalletRepository(this);
     private HomeMenuFragment homeMenuFragment;
+    private HeaderCell headerCell;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +109,19 @@ public class HomeActivity extends BaseActivity implements HomeContract.View , Ho
                     Double value = userInfo.getTmcMainchain() + userInfo.getTmcSidechain();
                     txtNumOfTotalTmc.setText(String.format(Locale.ENGLISH, "%.4f",
                             value));
+                    if (recyclerView.getItemCount() > 0 && recyclerView.getCell(0) instanceof HeaderCell){
+                        recyclerView.updateCell(0, userInfo);
+                        recyclerView.removeCells(1, recyclerView.getItemCount() - 1);
+                        for (Log log : userInfo.getLogs())
+                            recyclerView.addCell(new LogCell(log, HomeActivity.this));
+                    }
+
+                    else {
+                        headerCell = new HeaderCell(userInfo, HomeActivity.this, HomeActivity.this);
+                        recyclerView.addCell(headerCell);
+                        for (Log log : userInfo.getLogs())
+                            recyclerView.addCell(new LogCell(log, HomeActivity.this));
+                    }
                 }
             });
 
@@ -107,20 +131,26 @@ public class HomeActivity extends BaseActivity implements HomeContract.View , Ho
     }
 
     @Override
-    public void onRewarded(final String value) {
+    public void onRewarded(final RewardResponse rewardResponse) {
         try {
             runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
                     try {
+
                         txtMineLabel.setText(getString(R.string.mine_tmc));
                         progressMining.setVisibility(View.GONE);
                         btnMine.setEnabled(true);
-                        if (value == null) return;
-                        Double doubleValue = Double.valueOf(value);
+                        if (rewardResponse == null) return;
+                        Double doubleValue = rewardResponse.getValue();
                         Double realValue = doubleValue / Math.pow(10, 18);
                         txtNumOfTotalTmc.setText(String.format(Locale.ENGLISH, "%.4f",
                                 realValue));
+                        if (recyclerView.getItemCount() > 0 && recyclerView.getCell(0) instanceof HeaderCell){
+                            recyclerView.updateCell(0, rewardResponse.getLog());
+                            recyclerView.addCell(1,new LogCell(rewardResponse.getLog(), HomeActivity.this));
+                        }
+
                     } catch (NumberFormatException e) {
                         LogUtil.e(e);
                     }
@@ -159,7 +189,7 @@ public class HomeActivity extends BaseActivity implements HomeContract.View , Ho
                     })
                     .cancelable(true)
                     .show();
-        }catch (Exception e){
+        } catch (Exception e) {
             LogUtil.e(e);
         }
     }
@@ -167,10 +197,10 @@ public class HomeActivity extends BaseActivity implements HomeContract.View , Ho
     @Override
     public void onShowMenu() {
         try {
-            if (homeMenuFragment == null){
+            if (homeMenuFragment == null) {
                 homeMenuFragment = HomeMenuFragment.newInstance("menu", this);
             }
-            homeMenuFragment.show(getSupportFragmentManager(),"menu");
+            homeMenuFragment.show(getSupportFragmentManager(), "menu");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -179,7 +209,7 @@ public class HomeActivity extends BaseActivity implements HomeContract.View , Ho
     @Override
     public void onMenuClicked(int code) {
         homeMenuFragment.dismissAllowingStateLoss();
-        switch (code){
+        switch (code) {
             case HomeMenuFragment.CODE_VIEW_ADDRESS:
                 onShowAddress();
                 break;
@@ -205,7 +235,7 @@ public class HomeActivity extends BaseActivity implements HomeContract.View , Ho
         finish();
     }
 
-    private void onViewMnemonic(){
+    private void onViewMnemonic() {
         try {
             new MaterialDialog.Builder(this)
                     .title(getString(R.string.your_mnemonic))
@@ -219,12 +249,12 @@ public class HomeActivity extends BaseActivity implements HomeContract.View , Ho
                     })
                     .cancelable(true)
                     .show();
-        }catch (Exception e){
+        } catch (Exception e) {
             LogUtil.e(e);
         }
     }
 
-    private void promptDeleteWallet(){
+    private void promptDeleteWallet() {
         try {
             new MaterialDialog.Builder(this)
                     .title(getString(R.string.be_careful))
@@ -240,7 +270,7 @@ public class HomeActivity extends BaseActivity implements HomeContract.View , Ho
                     })
                     .cancelable(true)
                     .show();
-        }catch (Exception e){
+        } catch (Exception e) {
             LogUtil.e(e);
         }
     }
@@ -262,6 +292,68 @@ public class HomeActivity extends BaseActivity implements HomeContract.View , Ho
     }
 
 
+    @Override
+    public void onMainChainInfoClicked() {
+
+    }
+
+    @Override
+    public void onSideChainInfoClicked() {
+
+    }
+
+    @Override
+    public void onCashInBtnClicked(Double cashInValue) {
+        onCashing();
+        mPresenter.onCashIn(cashInValue);
+    }
+
+    @Override
+    public void onCashOutBtnClicked(Double cashOutValue) {
+        onCashing();
+        mPresenter.onCashOut(cashOutValue);
+    }
 
 
+    @Override
+    public void onCashing() {
+        btnMine.setEnabled(false);
+    }
+
+    @Override
+    public void onCashed(final CashActionResponse cashActionResponse) {
+        try {
+
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        btnMine.setEnabled(true);
+                        txtMineLabel.setText(getString(R.string.mine_tmc));
+                        progressMining.setVisibility(View.GONE);
+                        btnMine.setEnabled(true);
+                        if (cashActionResponse == null) return;
+                        Double doubleValue = cashActionResponse.getMainchain() + cashActionResponse.getMainchain();
+                        Double realValue = doubleValue / Math.pow(10, 18);
+                        txtNumOfTotalTmc.setText(String.format(Locale.ENGLISH, "%.4f",
+                                realValue));
+                        if (recyclerView.getItemCount() > 0 && recyclerView.getCell(0) instanceof HeaderCell)
+                            recyclerView.updateCell(0, cashActionResponse.getLog());
+                        recyclerView.addCell(1, new LogCell(cashActionResponse.getLog(), HomeActivity.this));
+                    } catch (NumberFormatException e) {
+                        LogUtil.e(e);
+                    }
+                    /**/
+                }
+            });
+
+        } catch (Exception e) {
+            LogUtil.e(e);
+        }
+    }
+
+    @Override
+    public void onCashFail(String reason) {
+        ToastUtil.show(reason);
+    }
 }

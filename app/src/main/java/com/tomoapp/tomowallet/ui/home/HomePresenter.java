@@ -6,11 +6,14 @@ import com.tomoapp.tomowallet.helper.ToastUtil;
 import com.tomoapp.tomowallet.helper.socket.TOMOSocketListener;
 import com.tomoapp.tomowallet.model.userInfo.UserInfoDataSource;
 import com.tomoapp.tomowallet.model.userInfo.UserInfoRepository;
+import com.tomoapp.tomowallet.model.userInfo.pojo.UserInfo;
 import com.tomoapp.tomowallet.model.wallet.Wallet;
 import com.tomoapp.tomowallet.model.wallet.WalletDataSource;
 import com.tomoapp.tomowallet.model.wallet.WalletRepository;
 import com.tomoapp.tomowallet.model.walletAction.WalletActionDataSource;
 import com.tomoapp.tomowallet.model.walletAction.WalletActionRepository;
+import com.tomoapp.tomowallet.model.walletActionResponse.CashActionResponse;
+import com.tomoapp.tomowallet.model.walletActionResponse.RewardResponse;
 
 import java.math.BigInteger;
 
@@ -21,14 +24,14 @@ import java.math.BigInteger;
 public class HomePresenter implements HomeContract.Presenter, TOMOSocketListener {
     private HomeContract.View mView;
     private WalletDataSource mWallet;
-    private UserInfoDataSource mUserInfo;
+
     private WalletActionDataSource mWalletAction;
 
     public HomePresenter(HomeContract.View mView) {
         this.mView = mView;
         this.mWallet = new WalletRepository(mView.getContext());
         this.mWalletAction = new WalletActionRepository(mView.getContext());
-        this.mUserInfo = new UserInfoRepository();
+
     }
 
     @Override
@@ -69,34 +72,55 @@ public class HomePresenter implements HomeContract.Presenter, TOMOSocketListener
     }
 
     @Override
-    public void onRetrieveUserInfo(String userInfoString) {
+    public void onRetrieveUserInfo(UserInfo userInfo) {
         try {
-            if (userInfoString == null || userInfoString.isEmpty()) return;
-            mView.setUserInfo(mUserInfo.createUserInfo(userInfoString));
+            //if (userInfoString == null || userInfoString.isEmpty()) return;
+            if (userInfo == null) return;
+            mView.setUserInfo(userInfo);
         }catch (Exception e){
             LogUtil.e(e);
         }
     }
 
     @Override
-    public void onRetrieveReward(String value) {
+    public void onRetrieveReward(RewardResponse rewardResponse) {
         try {
-            mView.onRewarded(value);
+            mView.onRewarded(rewardResponse);
         }catch (Exception e){
             LogUtil.e(e);
         }
     }
 
     @Override
-    public void onCashedIn(String transactionDetail) {
-
+    public void onCashedIn(CashActionResponse cashInResponse) {
+        mView.onCashed(cashInResponse);
     }
 
     @Override
-    public void onCashedOut(String transactionDetail) {
-
+    public void onCashedOut(CashActionResponse cashOutResponse) {
+        mView.onCashed(cashOutResponse);
     }
 
+
+    @Override
+    public void onCashIn(double value) {
+        mWalletAction.cashIn(value, new WalletActionDataSource.ActionExecuteListener() {
+            @Override
+            public void onFail(int code, String why) {
+                mView.onCashFail(why);
+            }
+        });
+    }
+
+    @Override
+    public void onCashOut(double value) {
+        mWalletAction.cashOut(value, new WalletActionDataSource.ActionExecuteListener() {
+            @Override
+            public void onFail(int code, String why) {
+                mView.onCashFail(why);
+            }
+        });
+    }
 
     @Override
     public void deleteWallet() {

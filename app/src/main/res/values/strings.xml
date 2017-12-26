@@ -25,4 +25,15 @@
     <string name="be_careful">Be careful!</string>
     <string name="delete_wallet_mess">You are about to permanently delete your wallet, and your wallet can not be restored. Do you want to continue?</string>
     <string name="delete">Delete</string>
+    <string name="tmc_in_tomo_chain">TMC in Tomochain</string>
+    <string name="more_info">more info</string>
+    <string name="cash_out">cash out</string>
+    <string name="cash_in">cash in</string>
+    <string name="tmc_in_eth_chain">TMC in Ethereum</string>
+    <string name="cash_out_amount">Enter your amount you want to cash out to ETH. The coin must between [0] and [1].</string>
+    <string name="cash_out_value">cash out value...</string>
+    <string name="cash_in_amount">Enter your amount you want to cash in to TOMOChain. The coin must between [0] and [1].</string>
+    <string name="cash_in_value">cash in value...</string>
+    <string name="invalid_value">Invalid value!</string>
+    <string name="total">Total</string>
 </resources>

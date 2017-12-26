@@ -6,6 +6,10 @@ import android.support.multidex.MultiDexApplication;
 import com.tomoapp.tomowallet.BuildConfig;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.helper.socket.TOMOSocketListener;
+import com.tomoapp.tomowallet.model.userInfo.UserInfoRepository;
+import com.tomoapp.tomowallet.model.userInfo.pojo.UserInfo;
+import com.tomoapp.tomowallet.model.walletActionResponse.CashActionResponse;
+import com.tomoapp.tomowallet.model.walletActionResponse.RewardResponse;
 
 import org.json.JSONObject;
 
@@ -48,7 +52,7 @@ public class MainApplication extends MultiDexApplication {
                     for (Object object : args) {
                         LogUtil.d("onUser: " + object.toString());
                     }
-                    callback.onRetrieveUserInfo(args[0].toString());
+                    callback.onRetrieveUserInfo(new UserInfoRepository().createUserInfo(args[0].toString()));
                 }
             }).on("reward", new Emitter.Listener() {
                 @Override
@@ -56,7 +60,7 @@ public class MainApplication extends MultiDexApplication {
                     for (Object object : args) {
                         LogUtil.d("onReward: " + object.toString());
                     }
-                    callback.onRetrieveReward(args[0].toString());
+                    callback.onRetrieveReward(RewardResponse.parseFromJson(args[0].toString()));
                 }
             }).on("cashIn", new Emitter.Listener() {
                 @Override
@@ -64,7 +68,7 @@ public class MainApplication extends MultiDexApplication {
                     for (Object object : args) {
                         LogUtil.d("onCashIn: " + object.toString());
                     }
-                    callback.onCashedIn(args[0].toString());
+                    callback.onCashedIn(CashActionResponse.parseFromJson(args[0].toString()));
                 }
             }).on("cashOut", new Emitter.Listener() {
                 @Override
@@ -72,7 +76,7 @@ public class MainApplication extends MultiDexApplication {
                     for (Object object : args) {
                         LogUtil.d("onCashOut: " + object.toString());
                     }
-                    callback.onCashedOut(args[0].toString());
+                    callback.onCashedOut(CashActionResponse.parseFromJson(args[0].toString()));
                 }
             }).on(io.socket.client.Socket.EVENT_DISCONNECT, new Emitter.Listener() {
 
@@ -81,10 +85,25 @@ public class MainApplication extends MultiDexApplication {
                     for (Object object : args) {
                         LogUtil.d("onDisconnect: " + object);
                     }
-                    callback.onCashedOut(args[0].toString());
+                    callback.onSocketDisconnected(args);
                 }
 
-            });
+            }).on("transfer", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    for (Object object : args) {
+                        LogUtil.d("onTransfer: " + object);
+                    }
+                }
+            }).on("receive", new Emitter.Listener() {
+                @Override
+                public void call(Object... args) {
+                    for (Object object : args) {
+                        LogUtil.d("onReceive: " + object);
+                    }
+                }
+            })
+            ;
         } catch (Exception e) {
             e.printStackTrace();
         }

@@ -1,5 +1,9 @@
 package com.tomoapp.tomowallet.helper.socket;
 
+import com.tomoapp.tomowallet.model.userInfo.pojo.UserInfo;
+import com.tomoapp.tomowallet.model.walletActionResponse.CashActionResponse;
+import com.tomoapp.tomowallet.model.walletActionResponse.RewardResponse;
+
 import java.math.BigInteger;
 
 /**
@@ -10,8 +14,8 @@ public interface TOMOSocketListener {
 
     void onSocketConnected();
     void onSocketDisconnected(Object... args);
-    void onRetrieveUserInfo(String userInfoString);
-    void onRetrieveReward(String value);
-    void onCashedIn(String transactionDetail);
-    void onCashedOut(String transactionDetail);
+    void onRetrieveUserInfo(UserInfo userInfo);
+    void onRetrieveReward(RewardResponse reward);
+    void onCashedIn(CashActionResponse cashInDetail);
+    void onCashedOut(CashActionResponse cashOutDetail);
 }

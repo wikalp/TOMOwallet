@@ -32,7 +32,6 @@ public class UserInfo{
                 ", sidechainInformation=" + sidechainInformation +
                 ", tmcSidechain=" + tmcSidechain +
                 ", tmcMainchain=" + tmcMainchain +
-                ", logs=" + logs +
                 '}';
     }
 

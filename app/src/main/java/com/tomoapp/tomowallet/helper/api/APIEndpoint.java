@@ -23,9 +23,9 @@ public interface APIEndpoint {
 
     @FormUrlEncoded
     @POST("api/wallets/cashIn")
-    Call<JSONObject> cashIn(@Field("walletAddress") String walletAddress, @Field("cashInValue") float cashInValue);
+    Call<JSONObject> cashIn(@Field("walletAddress") String walletAddress, @Field("cashInValue") double cashInValue);
 
     @FormUrlEncoded
     @POST("api/wallets/cashOut")
-    Call<JSONObject> cashOut(@Field("walletAddress") String walletAddress, @Field("cashOutValue") float cashOutValue);
+    Call<JSONObject> cashOut(@Field("walletAddress") String walletAddress, @Field("cashOutValue") double cashOutValue);
 }
