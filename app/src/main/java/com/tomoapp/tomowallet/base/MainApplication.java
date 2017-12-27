@@ -29,12 +29,22 @@ public class MainApplication extends MultiDexApplication {
 
     private static MainApplication instance;
     private Socket socket;
+    private Double tmcInSideChain;
+    private Double tmcInMainChain;
     @Override
     public void onCreate() {
         super.onCreate();
         MultiDex.install(this);
         instance = this;
 
+    }
+
+    public Double getTmcInSideChain() {
+        return tmcInSideChain;
+    }
+
+    public Double getTmcInMainChain() {
+        return tmcInMainChain;
     }
 
     private void initSocket(final TOMOSocketListener callback){
@@ -52,7 +62,14 @@ public class MainApplication extends MultiDexApplication {
                     for (Object object : args) {
                         LogUtil.d("onUser: " + object.toString());
                     }
-                    callback.onRetrieveUserInfo(new UserInfoRepository().createUserInfo(args[0].toString()));
+                    UserInfo userInfo = new UserInfoRepository().createUserInfo(args[0].toString());
+                    try {
+                        tmcInMainChain = userInfo.getTmcMainchain();
+                        tmcInSideChain = userInfo.getTmcSidechain();
+                    } catch (Exception e) {
+                        LogUtil.e(e);
+                    }
+                    callback.onRetrieveUserInfo(userInfo);
                 }
             }).on("reward", new Emitter.Listener() {
                 @Override
@@ -60,7 +77,15 @@ public class MainApplication extends MultiDexApplication {
                     for (Object object : args) {
                         LogUtil.d("onReward: " + object.toString());
                     }
-                    callback.onRetrieveReward(RewardResponse.parseFromJson(args[0].toString()));
+                    RewardResponse response = RewardResponse.parseFromJson(args[0].toString());
+                    try {
+                        tmcInMainChain = response.getLog().getTmcMainchain();
+                        tmcInSideChain = response.getLog().getTmcSidechain();
+                    } catch (Exception e) {
+                        LogUtil.e(e);
+                    }
+
+                    callback.onRetrieveReward(response);
                 }
             }).on("cashIn", new Emitter.Listener() {
                 @Override
@@ -68,7 +93,14 @@ public class MainApplication extends MultiDexApplication {
                     for (Object object : args) {
                         LogUtil.d("onCashIn: " + object.toString());
                     }
-                    callback.onCashedIn(CashActionResponse.parseFromJson(args[0].toString()));
+                    CashActionResponse cashActionResponse = CashActionResponse.parseFromJson(args[0].toString());
+                    try {
+                        tmcInMainChain = cashActionResponse.getMainchain();
+                        tmcInSideChain = cashActionResponse.getSidechain();
+                    } catch (Exception e) {
+                        LogUtil.e(e);
+                    }
+                    callback.onCashedIn(cashActionResponse);
                 }
             }).on("cashOut", new Emitter.Listener() {
                 @Override
@@ -76,7 +108,14 @@ public class MainApplication extends MultiDexApplication {
                     for (Object object : args) {
                         LogUtil.d("onCashOut: " + object.toString());
                     }
-                    callback.onCashedOut(CashActionResponse.parseFromJson(args[0].toString()));
+                    CashActionResponse cashActionResponse = CashActionResponse.parseFromJson(args[0].toString());
+                    try {
+                        tmcInMainChain = cashActionResponse.getMainchain();
+                        tmcInSideChain = cashActionResponse.getSidechain();
+                    } catch (Exception e) {
+                        LogUtil.e(e);
+                    }
+                    callback.onCashedIn(cashActionResponse);
                 }
             }).on(io.socket.client.Socket.EVENT_DISCONNECT, new Emitter.Listener() {
 

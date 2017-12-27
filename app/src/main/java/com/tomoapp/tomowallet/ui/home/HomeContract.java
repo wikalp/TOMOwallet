@@ -40,6 +40,7 @@ public interface HomeContract {
         String getMnemonic();
         void onCashIn(double value);
         void onCashOut(double value);
+        UserInfo getUserInfo();
 
     }
 }

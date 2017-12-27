@@ -4,6 +4,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CAMERA"/>
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -22,6 +23,11 @@
         </activity>
         <activity android:name=".ui.createWallet.CreateWalletActivity" />
         <activity android:name=".ui.home.HomeActivity" />
+        <activity android:name=".ui.tmcInfo.TMCInfoActivity" />
+        <activity android:name=".ui.ethInfo.ETHInfoActivity" />
+        <activity android:name=".ui.receive_tmc.ReceiveTMCActivity" />
+        <activity android:name=".ui.send_tmc.SendTMCActivity" />
+        <activity android:name=".ui.send_tmc.QRCodeScanActivity"/>
     </application>
 
 </manifest>

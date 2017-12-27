@@ -183,6 +183,9 @@ public class HeaderCell extends SimpleCell<UserInfo, HeaderCell.HeaderCellViewHo
             }
         }
 
+
+
+
         private void onCashOutButtonClicked() {
             try {
                 new MaterialDialog.Builder(context)

@@ -36,4 +36,22 @@
     <string name="cash_in_value">cash in value...</string>
     <string name="invalid_value">Invalid value!</string>
     <string name="total">Total</string>
+    <string name="reward_engine_smart_contract">Reward Engine Smart Contract:</string>
+    <string name="instruct_1">Do not send ethers nor tokens to any of the addresses above. They are for test only and we are not likely to have control of them in mainnet.</string>
+    <string name="tomo_coin_smart_contract">Tomocoin Smart Contract:</string>
+    <string name="cash_out_smart_contract">CashOut Smart Contract:</string>
+    <string name="cash_in_smart_contract">CashIn Smart Contract:</string>
+    <string name="send_tmc">Send TMC</string>
+    <string name="receive_tmc">Receive TMC</string>
+    <string name="your_address_click_to_copy">Your address (click to copy)</string>
+    <string name="recevie_address">Receiver address</string>
+    <string name="amount_to_transfer">Amount of TMC to transfer</string>
+    <string name="transfer">Transfer</string>
+    <string name="app_can_run_without_cam_permission">Application need camera permission to continue!</string>
+    <string name="amount_between">The transfer amount must greater than zero and must not exceed [1] TMC!</string>
+    <string name="hint_abc">eg: 3.15</string>
+    <string name="invalid_address">Invalid address!</string>
+    <string name="confirm_send">Confirm send TMC</string>
+    <string name="confirm_send_content">Please confirm that you are about to transfer [1] TMC to address [2]. This action can not be undo!</string>
+    <string name="cancel">Cancel</string>
 </resources>

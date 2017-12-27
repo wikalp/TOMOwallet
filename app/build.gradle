@@ -64,10 +64,12 @@ dependencies {
     implementation('com.github.ihsanbal:LoggingInterceptor:2.0.3') {
         exclude group: 'org.json', module: 'json'
     }
+    implementation 'com.dlazaro66.qrcodereaderview:qrcodereaderview:2.0.3'
+    implementation 'com.github.kenglxn.QRGen:android:2.3.0'
     implementation 'com.android.support:support-compat:27.0.2'
     implementation 'com.daimajia.easing:library:2.0@aar'
     implementation 'com.daimajia.androidanimations:library:2.3@aar'
-    implementation 'com.afollestad:easyvideoplayer:0.3.0'
+    implementation 'com.github.clans:fab:1.6.4'
     implementation 'com.airbnb.android:lottie:2.2.5'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.squareup.picasso:picasso:2.5.2'

@@ -80,7 +80,6 @@ public class LogCell extends SimpleCell<Log, LogCell.LogCellViewHolder> implemen
         private void setContent(Log log){
             try {
                 this.log = log;
-                LogUtil.d("setContent: " + log);
                 txtTransactionDate.setText(log.getTime());
                 txtTransactionType.setText(log.getType());
                 switch (log.getType()){
@@ -97,7 +96,7 @@ public class LogCell extends SimpleCell<Log, LogCell.LogCellViewHolder> implemen
                         txtTransactionType.setTextColor(context.getResources().getColor(R.color.color_3));
                         break;
                 }
-                txtMessage.setText(log.getMsg() == null ? "NULL" : log.getMsg());
+                txtMessage.setText(log.getMessage() == null ? "NULL" : log.getMessage());
                 txtTmcMainChain.setText(String.format(Locale.US,"%.2f", log.getTmcMainchain()));
                 txtTmcSideChain.setText(String.format(Locale.US,"%.2f", log.getTmcSidechain()));
                 txtTmcTotal.setText(String.format(Locale.US,"%.2f", (log.getTmcSidechain() + log.getTmcMainchain())));

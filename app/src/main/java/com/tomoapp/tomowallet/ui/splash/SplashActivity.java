@@ -7,7 +7,6 @@ import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.widget.Button;
 
-import com.afollestad.easyvideoplayer.EasyVideoPlayer;
 import com.tomoapp.tomowallet.R;
 import com.tomoapp.tomowallet.base.BaseActivity;
 import com.tomoapp.tomowallet.ui.createWallet.CreateWalletActivity;

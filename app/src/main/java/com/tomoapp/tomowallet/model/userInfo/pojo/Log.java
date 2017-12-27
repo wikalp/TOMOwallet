@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName;
 
 public class Log {
 
-    @SerializedName("msg")
+    @SerializedName("message")
     @Expose
-    public String msg;
+    public String message;
     @SerializedName("type")
     @Expose
     public String type;
@@ -34,12 +34,12 @@ public class Log {
     public Double total;
 
 
-    public String getMsg() {
-        return msg;
+    public String getMessage() {
+        return message;
     }
 
-    public void setMsg(String msg) {
-        this.msg = msg;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
     public String getType() {
@@ -110,7 +110,7 @@ public class Log {
     @Override
     public String toString() {
         return "Log{" +
-                "msg='" + msg + '\'' +
+                "msg='" + message + '\'' +
                 ", type='" + type + '\'' +
                 ", change='" + change + '\'' +
                 ", time='" + time + '\'' +

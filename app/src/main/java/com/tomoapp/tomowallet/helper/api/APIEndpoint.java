@@ -28,4 +28,8 @@ public interface APIEndpoint {
     @FormUrlEncoded
     @POST("api/wallets/cashOut")
     Call<JSONObject> cashOut(@Field("walletAddress") String walletAddress, @Field("cashOutValue") double cashOutValue);
+
+    @FormUrlEncoded
+    @POST("api/wallets/transfer")
+    Call<JSONObject> transfer(@Field("from") String from, @Field("to") String to, @Field("value") double value);
 }

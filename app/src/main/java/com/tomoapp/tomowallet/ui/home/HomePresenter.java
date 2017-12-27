@@ -24,7 +24,7 @@ import java.math.BigInteger;
 public class HomePresenter implements HomeContract.Presenter, TOMOSocketListener {
     private HomeContract.View mView;
     private WalletDataSource mWallet;
-
+    private UserInfo userInfo;
     private WalletActionDataSource mWalletAction;
 
     public HomePresenter(HomeContract.View mView) {
@@ -76,6 +76,7 @@ public class HomePresenter implements HomeContract.Presenter, TOMOSocketListener
         try {
             //if (userInfoString == null || userInfoString.isEmpty()) return;
             if (userInfo == null) return;
+            this.userInfo = userInfo;
             mView.setUserInfo(userInfo);
         }catch (Exception e){
             LogUtil.e(e);
@@ -141,5 +142,11 @@ public class HomePresenter implements HomeContract.Presenter, TOMOSocketListener
     @Override
     public String getMnemonic() {
         return mWallet == null ? "" : mWallet.getMnemonic();
+    }
+
+
+    @Override
+    public UserInfo getUserInfo() {
+        return userInfo;
     }
 }

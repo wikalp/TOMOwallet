@@ -6,15 +6,18 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.constraint.ConstraintLayout;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.airbnb.lottie.LottieAnimationView;
+import com.github.clans.fab.FloatingActionButton;
+import com.github.clans.fab.FloatingActionMenu;
+import com.google.gson.Gson;
 import com.jaychang.srv.SimpleRecyclerView;
 import com.tomoapp.tomowallet.R;
 import com.tomoapp.tomowallet.base.BaseActivity;
@@ -26,9 +29,13 @@ import com.tomoapp.tomowallet.model.wallet.WalletDataSource;
 import com.tomoapp.tomowallet.model.wallet.WalletRepository;
 import com.tomoapp.tomowallet.model.walletActionResponse.CashActionResponse;
 import com.tomoapp.tomowallet.model.walletActionResponse.RewardResponse;
+import com.tomoapp.tomowallet.ui.ethInfo.ETHInfoActivity;
 import com.tomoapp.tomowallet.ui.home.cell.HeaderCell;
 import com.tomoapp.tomowallet.ui.home.cell.LogCell;
+import com.tomoapp.tomowallet.ui.receive_tmc.ReceiveTMCActivity;
+import com.tomoapp.tomowallet.ui.send_tmc.SendTMCActivity;
 import com.tomoapp.tomowallet.ui.splash.SplashActivity;
+import com.tomoapp.tomowallet.ui.tmcInfo.TMCInfoActivity;
 
 import java.util.Locale;
 
@@ -63,6 +70,12 @@ public class HomeActivity extends BaseActivity implements HomeContract.View, Hom
     TextView txtWalletAddress;
     @BindView(R.id.recycler_view)
     SimpleRecyclerView recyclerView;
+    @BindView(R.id.btn_send_tmc)
+    FloatingActionButton btnSendTmc;
+    @BindView(R.id.btn_receive_tmc)
+    FloatingActionButton btnReceiveTmc;
+    @BindView(R.id.fab)
+    FloatingActionMenu fab;
     private HomeContract.Presenter mPresenter;
     private WalletDataSource wallet = new WalletRepository(this);
     private HomeMenuFragment homeMenuFragment;
@@ -78,6 +91,24 @@ public class HomeActivity extends BaseActivity implements HomeContract.View, Hom
         LogUtil.d("HomeActivity: " + wallet.getAddress());
         LogUtil.d("HomeActivity: " + wallet.getPrivateKey());
         txtWalletAddress.setText(wallet.getAddress());
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+            }
+
+            @Override
+            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+                super.onScrolled(recyclerView, dx, dy);
+                if (dy > 0) {
+                    // Scrolling up
+                    fab.hideMenu(true);
+                } else {
+                    // Scrolling down
+                    fab.showMenu(true);
+                }
+            }
+        });
         mPresenter = new HomePresenter(this);
         mPresenter.init();
     }
@@ -109,14 +140,14 @@ public class HomeActivity extends BaseActivity implements HomeContract.View, Hom
                     Double value = userInfo.getTmcMainchain() + userInfo.getTmcSidechain();
                     txtNumOfTotalTmc.setText(String.format(Locale.ENGLISH, "%.4f",
                             value));
-                    if (recyclerView.getItemCount() > 0 && recyclerView.getCell(0) instanceof HeaderCell){
-                        recyclerView.updateCell(0, userInfo);
+                    if (recyclerView.getItemCount() > 0 && recyclerView.getCell(0) instanceof HeaderCell) {
+                        if (userInfo.getLogs().size() > 0){
+                            recyclerView.updateCell(0, userInfo.getLogs().get(0));
+                        }
                         recyclerView.removeCells(1, recyclerView.getItemCount() - 1);
                         for (Log log : userInfo.getLogs())
                             recyclerView.addCell(new LogCell(log, HomeActivity.this));
-                    }
-
-                    else {
+                    } else {
                         headerCell = new HeaderCell(userInfo, HomeActivity.this, HomeActivity.this);
                         recyclerView.addCell(headerCell);
                         for (Log log : userInfo.getLogs())
@@ -146,9 +177,9 @@ public class HomeActivity extends BaseActivity implements HomeContract.View, Hom
                         Double realValue = doubleValue / Math.pow(10, 18);
                         txtNumOfTotalTmc.setText(String.format(Locale.ENGLISH, "%.4f",
                                 realValue));
-                        if (recyclerView.getItemCount() > 0 && recyclerView.getCell(0) instanceof HeaderCell){
+                        if (recyclerView.getItemCount() > 0 && recyclerView.getCell(0) instanceof HeaderCell) {
                             recyclerView.updateCell(0, rewardResponse.getLog());
-                            recyclerView.addCell(1,new LogCell(rewardResponse.getLog(), HomeActivity.this));
+                            recyclerView.addCell(1, new LogCell(rewardResponse.getLog(), HomeActivity.this));
                         }
 
                     } catch (NumberFormatException e) {
@@ -276,7 +307,7 @@ public class HomeActivity extends BaseActivity implements HomeContract.View, Hom
     }
 
 
-    @OnClick({R.id.btn_menu, R.id.btn_mine, R.id.txt_wallet_address})
+    @OnClick({R.id.btn_menu, R.id.btn_mine, R.id.txt_wallet_address, R.id.btn_send_tmc, R.id.btn_receive_tmc})
     public void onViewClicked(View view) {
         switch (view.getId()) {
             case R.id.btn_menu:
@@ -288,18 +319,36 @@ public class HomeActivity extends BaseActivity implements HomeContract.View, Hom
             case R.id.txt_wallet_address:
                 onShowAddress();
                 break;
+            case R.id.btn_send_tmc:
+                fab.close(true);
+                startActivity(new Intent(this, SendTMCActivity.class));
+                break;
+            case R.id.btn_receive_tmc:
+                fab.close(true);
+                startActivity(new Intent(this, ReceiveTMCActivity.class));
+                break;
         }
     }
 
 
     @Override
     public void onMainChainInfoClicked() {
-
+        try {
+            String data = new Gson().toJson(mPresenter.getUserInfo());
+            startActivity(new Intent(this, ETHInfoActivity.class).putExtra(ETHInfoActivity.ARGS_USER_INFO, data));
+        } catch (Exception e) {
+            LogUtil.e(e);
+        }
     }
 
     @Override
     public void onSideChainInfoClicked() {
-
+        try {
+            String data = new Gson().toJson(mPresenter.getUserInfo());
+            startActivity(new Intent(this, TMCInfoActivity.class).putExtra(TMCInfoActivity.ARGS_USER_INFO, data));
+        } catch (Exception e) {
+            LogUtil.e(e);
+        }
     }
 
     @Override
@@ -356,4 +405,6 @@ public class HomeActivity extends BaseActivity implements HomeContract.View, Hom
     public void onCashFail(String reason) {
         ToastUtil.show(reason);
     }
+
+
 }
