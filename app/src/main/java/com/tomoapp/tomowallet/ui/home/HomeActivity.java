@@ -21,6 +21,7 @@ import com.google.gson.Gson;
 import com.jaychang.srv.SimpleRecyclerView;
 import com.tomoapp.tomowallet.R;
 import com.tomoapp.tomowallet.base.BaseActivity;
+import com.tomoapp.tomowallet.base.BaseSocketActivity;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.helper.ToastUtil;
 import com.tomoapp.tomowallet.model.userInfo.pojo.Log;
@@ -47,7 +48,7 @@ import butterknife.OnClick;
  * Created by macbook on 12/21/17.
  */
 
-public class HomeActivity extends BaseActivity implements HomeContract.View, HomeMenuFragment.OnMenuClickListener, HeaderCell.HeaderCellItemClickListener {
+public class HomeActivity extends BaseSocketActivity implements HomeContract.View, HomeMenuFragment.OnMenuClickListener, HeaderCell.HeaderCellItemClickListener {
 
 
     @BindView(R.id.txt_label)
@@ -254,7 +255,7 @@ public class HomeActivity extends BaseActivity implements HomeContract.View, Hom
     }
 
     @Override
-    public Context getContext() {
+    public BaseSocketActivity getContext() {
         return this;
     }
 
@@ -382,7 +383,7 @@ public class HomeActivity extends BaseActivity implements HomeContract.View, Hom
                         progressMining.setVisibility(View.GONE);
                         btnMine.setEnabled(true);
                         if (cashActionResponse == null) return;
-                        Double doubleValue = cashActionResponse.getMainchain() + cashActionResponse.getMainchain();
+                        Double doubleValue = cashActionResponse.getMainchain() + cashActionResponse.getSidechain();
                         Double realValue = doubleValue / Math.pow(10, 18);
                         txtNumOfTotalTmc.setText(String.format(Locale.ENGLISH, "%.4f",
                                 realValue));
@@ -407,4 +408,50 @@ public class HomeActivity extends BaseActivity implements HomeContract.View, Hom
     }
 
 
+    @Override
+    public void onSocketConnected() {
+        super.onSocketConnected();
+        emitUser();
+    }
+
+    @Override
+    public void onSocketDisconnected(Object... args) {
+        super.onSocketDisconnected(args);
+    }
+
+    @Override
+    public void onRetrieveUserInfo(UserInfo userInfo) {
+        super.onRetrieveUserInfo(userInfo);
+        setUserInfo(userInfo);
+    }
+
+    @Override
+    public void onRetrieveReward(RewardResponse reward) {
+        super.onRetrieveReward(reward);
+        onRewarded(reward);
+    }
+
+    @Override
+    public void onCashedIn(CashActionResponse cashInDetail) {
+        super.onCashedIn(cashInDetail);
+        onCashed(cashInDetail);
+    }
+
+    @Override
+    public void onCashedOut(CashActionResponse cashOutDetail) {
+        super.onCashedOut(cashOutDetail);
+        onCashed(cashOutDetail);
+    }
+
+    @Override
+    public void onTMCSent(CashActionResponse transactionDetail) {
+        super.onTMCSent(transactionDetail);
+        onCashed(transactionDetail);
+    }
+
+    @Override
+    public void onTMCReceived(CashActionResponse transactionDetail) {
+        super.onTMCReceived(transactionDetail);
+        onCashed(transactionDetail);
+    }
 }

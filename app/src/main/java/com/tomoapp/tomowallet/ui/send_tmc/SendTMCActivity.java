@@ -15,6 +15,7 @@ import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
 import com.tomoapp.tomowallet.R;
 import com.tomoapp.tomowallet.base.BaseActivity;
+import com.tomoapp.tomowallet.base.BaseSocketActivity;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.helper.ToastUtil;
 
@@ -26,7 +27,7 @@ import butterknife.OnClick;
  * Created by macbook on 12/27/17.
  */
 
-public class SendTMCActivity extends BaseActivity implements SendTMCContract.View{
+public class SendTMCActivity extends BaseSocketActivity implements SendTMCContract.View{
 
 
     @BindView(R.id.btn_back)

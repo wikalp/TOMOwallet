@@ -5,6 +5,7 @@ import android.support.multidex.MultiDexApplication;
 
 import com.tomoapp.tomowallet.BuildConfig;
 import com.tomoapp.tomowallet.helper.LogUtil;
+import com.tomoapp.tomowallet.helper.alert.AlertHelper;
 import com.tomoapp.tomowallet.helper.socket.TOMOSocketListener;
 import com.tomoapp.tomowallet.model.userInfo.UserInfoRepository;
 import com.tomoapp.tomowallet.model.userInfo.pojo.UserInfo;
@@ -46,7 +47,6 @@ public class MainApplication extends MultiDexApplication {
     public Double getTmcInMainChain() {
         return tmcInMainChain;
     }
-
     private void initSocket(final TOMOSocketListener callback){
         try {
             socket = IO.socket(BuildConfig.API_ENDPOINT);
@@ -84,7 +84,6 @@ public class MainApplication extends MultiDexApplication {
                     } catch (Exception e) {
                         LogUtil.e(e);
                     }
-
                     callback.onRetrieveReward(response);
                 }
             }).on("cashIn", new Emitter.Listener() {
@@ -115,7 +114,7 @@ public class MainApplication extends MultiDexApplication {
                     } catch (Exception e) {
                         LogUtil.e(e);
                     }
-                    callback.onCashedIn(cashActionResponse);
+                    callback.onCashedOut(cashActionResponse);
                 }
             }).on(io.socket.client.Socket.EVENT_DISCONNECT, new Emitter.Listener() {
 
@@ -133,6 +132,14 @@ public class MainApplication extends MultiDexApplication {
                     for (Object object : args) {
                         LogUtil.d("onTransfer: " + object);
                     }
+                    CashActionResponse cashActionResponse = CashActionResponse.parseFromJson(args[0].toString());
+                    try {
+                        tmcInMainChain = cashActionResponse.getMainchain();
+                        tmcInSideChain = cashActionResponse.getSidechain();
+                    } catch (Exception e) {
+                        LogUtil.e(e);
+                    }
+                    callback.onTMCSent(cashActionResponse);
                 }
             }).on("receive", new Emitter.Listener() {
                 @Override
@@ -140,6 +147,14 @@ public class MainApplication extends MultiDexApplication {
                     for (Object object : args) {
                         LogUtil.d("onReceive: " + object);
                     }
+                    CashActionResponse cashActionResponse = CashActionResponse.parseFromJson(args[0].toString());
+                    try {
+                        tmcInMainChain = cashActionResponse.getMainchain();
+                        tmcInSideChain = cashActionResponse.getSidechain();
+                    } catch (Exception e) {
+                        LogUtil.e(e);
+                    }
+                    callback.onTMCReceived(cashActionResponse);
                 }
             })
             ;
@@ -184,7 +199,14 @@ public class MainApplication extends MultiDexApplication {
     }
 
 
+    public static BaseActivity currentActivity;
 
+    public static BaseActivity getCurrentActivity() {
+        return currentActivity;
+    }
+    public static void setCurrentActivity(BaseActivity activity){
+        currentActivity = activity;
+    }
     public static MainApplication get(){
         return instance;
     }

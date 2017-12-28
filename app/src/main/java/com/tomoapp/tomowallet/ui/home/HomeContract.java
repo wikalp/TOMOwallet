@@ -2,6 +2,7 @@ package com.tomoapp.tomowallet.ui.home;
 
 import android.content.Context;
 
+import com.tomoapp.tomowallet.base.BaseSocketActivity;
 import com.tomoapp.tomowallet.model.userInfo.pojo.UserInfo;
 import com.tomoapp.tomowallet.model.wallet.Wallet;
 import com.tomoapp.tomowallet.model.walletActionResponse.CashActionResponse;
@@ -15,7 +16,7 @@ import com.tomoapp.tomowallet.model.walletActionResponse.RewardResponse;
 public interface HomeContract {
 
     interface View{
-        Context getContext();
+        BaseSocketActivity getContext();
 
         void setUserInfo(UserInfo userInfo);
         void onRewarded(RewardResponse rewardResponse);

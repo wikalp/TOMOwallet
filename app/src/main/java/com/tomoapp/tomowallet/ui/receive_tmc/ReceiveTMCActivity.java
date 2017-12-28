@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.tomoapp.tomowallet.R;
 import com.tomoapp.tomowallet.base.BaseActivity;
+import com.tomoapp.tomowallet.base.BaseSocketActivity;
+import com.tomoapp.tomowallet.base.MainApplication;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.helper.ToastUtil;
 import com.tomoapp.tomowallet.model.userInfo.UserInfoRepository;
@@ -33,7 +35,7 @@ import butterknife.OnClick;
  * Created by macbook on 12/27/17.
  */
 
-public class ReceiveTMCActivity extends BaseActivity {
+public class ReceiveTMCActivity extends BaseSocketActivity {
 
 
     @BindView(R.id.btn_back)
@@ -69,6 +71,7 @@ public class ReceiveTMCActivity extends BaseActivity {
             txt1.setText(walletAddress);
             Bitmap myBitmap = QRCode.from(walletAddress).bitmap();
             imgQr.setImageBitmap(myBitmap);
+            LogUtil.d("activity: " + MainApplication.getCurrentActivity().getClass().getSimpleName());
         } catch (Exception e) {
             LogUtil.e(e);
         }

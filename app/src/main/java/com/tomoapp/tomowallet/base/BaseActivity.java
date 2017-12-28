@@ -1,5 +1,6 @@
 package com.tomoapp.tomowallet.base;
 
+import android.content.pm.ActivityInfo;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -13,10 +14,13 @@ import com.tomoapp.tomowallet.R;
 
 public class BaseActivity extends AppCompatActivity {
 
-
+    protected MainApplication application;
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        application = MainApplication.get();
+        MainApplication.setCurrentActivity(this);
     }
 
 
@@ -30,7 +34,9 @@ public class BaseActivity extends AppCompatActivity {
 
     }
 
-
+    protected MainApplication getCurrentApplication() {
+        return application == null ? MainApplication.get() : application;
+    }
 
     public void setStatusbarColor(int color){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {

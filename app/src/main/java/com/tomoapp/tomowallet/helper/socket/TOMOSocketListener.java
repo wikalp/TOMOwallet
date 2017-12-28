@@ -18,4 +18,6 @@ public interface TOMOSocketListener {
     void onRetrieveReward(RewardResponse reward);
     void onCashedIn(CashActionResponse cashInDetail);
     void onCashedOut(CashActionResponse cashOutDetail);
+    void onTMCSent(CashActionResponse transactionDetail);
+    void onTMCReceived(CashActionResponse transactionDetail);
 }
