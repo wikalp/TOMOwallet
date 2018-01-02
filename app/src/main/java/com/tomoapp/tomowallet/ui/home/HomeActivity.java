@@ -22,6 +22,7 @@ import com.jaychang.srv.SimpleRecyclerView;
 import com.tomoapp.tomowallet.R;
 import com.tomoapp.tomowallet.base.BaseActivity;
 import com.tomoapp.tomowallet.base.BaseSocketActivity;
+import com.tomoapp.tomowallet.base.MainApplication;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.helper.ToastUtil;
 import com.tomoapp.tomowallet.model.userInfo.pojo.Log;
@@ -118,6 +119,7 @@ public class HomeActivity extends BaseSocketActivity implements HomeContract.Vie
     @Override
     protected void onResume() {
         super.onResume();
+        MainApplication.setCurrentActivity(this);
         if (mPresenter == null)
             mPresenter = new HomePresenter(this);
         mPresenter.refreshUserInfo();
@@ -417,6 +419,7 @@ public class HomeActivity extends BaseSocketActivity implements HomeContract.Vie
     @Override
     public void onSocketDisconnected(Object... args) {
         super.onSocketDisconnected(args);
+        LogUtil.d("onSocketDisconnected: " + MainApplication.getCurrentActivity().getLocalClassName());
     }
 
     @Override

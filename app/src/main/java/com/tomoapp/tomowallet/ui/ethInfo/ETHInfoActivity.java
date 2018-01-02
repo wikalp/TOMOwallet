@@ -12,6 +12,8 @@ import android.widget.TextView;
 
 import com.tomoapp.tomowallet.R;
 import com.tomoapp.tomowallet.base.BaseActivity;
+import com.tomoapp.tomowallet.base.BaseSocketActivity;
+import com.tomoapp.tomowallet.base.MainApplication;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.model.userInfo.UserInfoDataSource;
 import com.tomoapp.tomowallet.model.userInfo.UserInfoRepository;
@@ -25,7 +27,7 @@ import butterknife.OnClick;
  * Created by macbook on 12/27/17.
  */
 
-public class ETHInfoActivity extends BaseActivity {
+public class ETHInfoActivity extends BaseSocketActivity {
 
     @BindView(R.id.btn_back)
     ImageView btnBack;
@@ -78,7 +80,11 @@ public class ETHInfoActivity extends BaseActivity {
     }
 
 
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainApplication.setCurrentActivity(this);
+    }
 
     private void onDetailClicked(String path, String content){
         try {

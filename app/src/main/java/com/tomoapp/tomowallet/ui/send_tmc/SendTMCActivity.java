@@ -13,11 +13,13 @@ import android.widget.TextView;
 
 import com.afollestad.materialdialogs.DialogAction;
 import com.afollestad.materialdialogs.MaterialDialog;
+import com.airbnb.lottie.LottieAnimationView;
 import com.tomoapp.tomowallet.R;
-import com.tomoapp.tomowallet.base.BaseActivity;
 import com.tomoapp.tomowallet.base.BaseSocketActivity;
+import com.tomoapp.tomowallet.base.MainApplication;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.helper.ToastUtil;
+import com.tomoapp.tomowallet.model.walletActionResponse.CashActionResponse;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -27,7 +29,7 @@ import butterknife.OnClick;
  * Created by macbook on 12/27/17.
  */
 
-public class SendTMCActivity extends BaseSocketActivity implements SendTMCContract.View{
+public class SendTMCActivity extends BaseSocketActivity implements SendTMCContract.View {
 
 
     @BindView(R.id.btn_back)
@@ -47,7 +49,11 @@ public class SendTMCActivity extends BaseSocketActivity implements SendTMCContra
     @BindView(R.id.edt_tmc_to_transfer)
     EditText edtTmcToTransfer;
     @BindView(R.id.btn_transfer)
-    TextView btnTransfer;
+    LinearLayout btnTransfer;
+    @BindView(R.id.progress_mining)
+    LottieAnimationView progressMining;
+    @BindView(R.id.txt_send)
+    TextView txtSend;
 
     private SendTMCContract.Presenter mPresenter;
 
@@ -56,6 +62,7 @@ public class SendTMCActivity extends BaseSocketActivity implements SendTMCContra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_tmc);
         ButterKnife.bind(this);
+        MainApplication.setCurrentActivity(this);
         mPresenter = new SendTMCPresenter(this);
         mPresenter.init();
     }
@@ -87,7 +94,7 @@ public class SendTMCActivity extends BaseSocketActivity implements SendTMCContra
     public void loadContent() {
         try {
             txtLabel3.setText(getString(R.string.amount_between).replace("[1]", mPresenter.getTMCInSideChain() + ""));
-        }catch (Exception e){
+        } catch (Exception e) {
             LogUtil.e(e);
         }
     }
@@ -107,7 +114,7 @@ public class SendTMCActivity extends BaseSocketActivity implements SendTMCContra
         new MaterialDialog.Builder(this)
                 .title(getString(R.string.confirm_send))
                 .content(getString(R.string.confirm_send_content).replace("[2]", address)
-                    .replace("[1]",""+value))
+                        .replace("[1]", "" + value))
                 .positiveText(getString(R.string.transfer))
                 .negativeText(getString(R.string.cancel))
                 .positiveColor(getResources().getColor(R.color.color_blue))
@@ -124,15 +131,52 @@ public class SendTMCActivity extends BaseSocketActivity implements SendTMCContra
     }
 
     @Override
+    protected void onResume() {
+        super.onResume();
+        MainApplication.setCurrentActivity(this);
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        MainApplication.setCurrentActivity(this);
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case 1101:
-                if (resultCode == RESULT_OK && data != null){
+                if (resultCode == RESULT_OK && data != null) {
                     String address = data.getStringExtra("QR");
                     edtReceiverAddress.setText(address);
                 }
                 break;
         }
     }
+
+    @Override
+    public void onTransferring() {
+        try {
+            progressMining.setVisibility(View.VISIBLE);
+            txtSend.setText(getString(R.string.transferring));
+            btnTransfer.setEnabled(false);
+        } catch (Exception e) {
+            LogUtil.e(e);
+        }
+    }
+
+    @Override
+    public void onTMCSent(CashActionResponse transactionDetail) {
+        super.onTMCSent(transactionDetail);
+        try {
+            progressMining.setVisibility(View.GONE);
+            txtSend.setText(getString(R.string.transfer));
+            btnTransfer.setEnabled(true);
+        } catch (Exception e) {
+            LogUtil.e(e);
+        }
+    }
+
+
+    /*@Override
+    public void onSocketConnected() {
+        super.onSocketConnected();
+        emitUser();
+    }*/
 }

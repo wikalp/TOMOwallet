@@ -27,12 +27,12 @@ public class HomePresenter implements HomeContract.Presenter{
 
     @Override
     public void init() {
-
+        //MainApplication.get().connectSocket(mView.getContext());
     }
 
     @Override
     public void destroy() {
-
+        //MainApplication.get().disconnectSocket(mView.getContext());
     }
 
     @Override

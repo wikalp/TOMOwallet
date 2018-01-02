@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.tomoapp.tomowallet.R;
 import com.tomoapp.tomowallet.base.BaseActivity;
+import com.tomoapp.tomowallet.base.BaseSocketActivity;
+import com.tomoapp.tomowallet.base.MainApplication;
 import com.tomoapp.tomowallet.model.userInfo.UserInfoDataSource;
 import com.tomoapp.tomowallet.model.userInfo.UserInfoRepository;
 import com.tomoapp.tomowallet.model.userInfo.pojo.UserInfo;
@@ -21,7 +23,7 @@ import butterknife.OnClick;
  * Created by macbook on 12/27/17.
  */
 
-public class TMCInfoActivity extends BaseActivity {
+public class TMCInfoActivity extends BaseSocketActivity {
 
 
     @BindView(R.id.btn_back)
@@ -52,6 +54,13 @@ public class TMCInfoActivity extends BaseActivity {
         txt2.setText(userInfo.getSidechainInformation().getTmcAddress());
         txt3.setText(userInfo.getSidechainInformation().getCashOutAddress());
         txt4.setText(userInfo.getSidechainInformation().getCashInAddress());
+    }
+
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainApplication.setCurrentActivity(this);
     }
 
     @OnClick(R.id.btn_back)

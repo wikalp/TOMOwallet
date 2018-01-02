@@ -24,6 +24,9 @@ public class BaseActivity extends AppCompatActivity {
     }
 
 
+    protected void setCurrentActivity(BaseActivity activity){
+        MainApplication.setCurrentActivity(activity);
+    }
 
     protected void showLoadingDialog(){
 

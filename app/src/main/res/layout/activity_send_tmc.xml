@@ -107,18 +107,33 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:background="@color/color_blue">
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="50dp"
+                android:orientation="horizontal"
+                android:id="@+id/btn_transfer"
+                android:gravity="center"
                 android:paddingStart="30dp"
-                android:paddingEnd="30dp"
-                android:paddingTop="15dp"
-                android:paddingBottom="15dp"
-                android:text="@string/transfer"
-                android:textAllCaps="true"
-                android:textColor="@color/color_1"
-                android:background="@drawable/ripple_effect"
-                android:id="@+id/btn_transfer"/>
+                android:paddingEnd="30dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/transfer"
+                    android:textAllCaps="true"
+                    android:textColor="@color/color_1"
+                    android:background="@drawable/ripple_effect"
+                    android:id="@+id/txt_send"/>
+                <com.airbnb.lottie.LottieAnimationView
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    app:lottie_fileName="loading.json"
+                    android:id="@+id/progress_mining"
+                    app:lottie_loop="true"
+                    android:visibility="gone"
+                    app:lottie_autoPlay="true"
+                    android:layout_marginStart="15dp"/>
+            </LinearLayout>
+
         </LinearLayout>
 
     </android.support.v7.widget.CardView>

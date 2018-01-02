@@ -24,6 +24,7 @@ import com.tomoapp.tomowallet.model.userInfo.UserInfoRepository;
 import com.tomoapp.tomowallet.model.userInfo.pojo.UserInfo;
 import com.tomoapp.tomowallet.model.wallet.Wallet;
 import com.tomoapp.tomowallet.model.wallet.WalletRepository;
+import com.tomoapp.tomowallet.model.walletActionResponse.CashActionResponse;
 
 import net.glxn.qrgen.android.QRCode;
 
@@ -61,8 +62,15 @@ public class ReceiveTMCActivity extends BaseSocketActivity {
             finish();
             return;
         }
+        setCurrentActivity(this);
         loadContent();
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        MainApplication.setCurrentActivity(this);
     }
 
 
@@ -71,7 +79,6 @@ public class ReceiveTMCActivity extends BaseSocketActivity {
             txt1.setText(walletAddress);
             Bitmap myBitmap = QRCode.from(walletAddress).bitmap();
             imgQr.setImageBitmap(myBitmap);
-            LogUtil.d("activity: " + MainApplication.getCurrentActivity().getClass().getSimpleName());
         } catch (Exception e) {
             LogUtil.e(e);
         }
@@ -100,4 +107,26 @@ public class ReceiveTMCActivity extends BaseSocketActivity {
             clipboard.setPrimaryClip(clip);
         }
     }
+
+
+    /*@Override
+    public void onSocketConnected() {
+        super.onSocketConnected();
+        LogUtil.d("onSocketConnected: " + MainApplication.getCurrentActivity().getLocalClassName());
+        emitUser();
+
+    }
+
+    @Override
+    public void onSocketDisconnected(Object... args) {
+        super.onSocketDisconnected(args);
+        LogUtil.d("onSocketDisconnected: " + MainApplication.getCurrentActivity().getLocalClassName());
+
+    }
+
+    @Override
+    public void onTMCReceived(CashActionResponse transactionDetail) {
+        super.onTMCReceived(transactionDetail);
+        LogUtil.d("onTMCReceived: " + MainApplication.getCurrentActivity().getLocalClassName());
+    }*/
 }

@@ -1,6 +1,7 @@
 package com.tomoapp.tomowallet.ui.createWallet;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -19,6 +20,7 @@ import com.tomoapp.tomowallet.base.BaseActivity;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.helper.ToastUtil;
 import com.tomoapp.tomowallet.model.wallet.Wallet;
+import com.tomoapp.tomowallet.ui.home.HomeActivity;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -86,8 +88,10 @@ public class CreateWalletActivity extends BaseActivity implements CreateWalletCo
 
     @Override
     public void onDone() {
-        LogUtil.d("onDONE");
-        ToastUtil.show("DONE");
+        /*LogUtil.d("onDONE");
+        ToastUtil.show("DONE");*/
+        startActivity(new Intent(this, HomeActivity.class));
+        finish();
     }
 
     @Override

@@ -17,7 +17,7 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
-        buildConfigField "String", "API_ENDPOINT", '"https://testnet.tomocoin.io/"'
+        buildConfigField "String", "API_ENDPOINT", '"https://wallet.tomocoin.io/"'
     }
     buildTypes {
         release {

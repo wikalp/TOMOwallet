@@ -1,13 +1,18 @@
 package com.tomoapp.tomowallet.helper.alert;
 
+import android.app.Activity;
 import android.view.View;
 
 import com.tapadoo.alerter.Alert;
 import com.tapadoo.alerter.Alerter;
 import com.tomoapp.tomowallet.base.BaseActivity;
+import com.tomoapp.tomowallet.base.BaseSocketActivity;
+import com.tomoapp.tomowallet.base.MainApplication;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.model.walletActionResponse.CashActionResponse;
 import com.tomoapp.tomowallet.model.walletActionResponse.RewardResponse;
+import com.tomoapp.tomowallet.ui.send_tmc.SendTMCActivity;
+import com.tomoapp.tomowallet.ui.send_tmc.SendTMCContract;
 
 import java.util.Locale;
 
@@ -16,11 +21,9 @@ import java.util.Locale;
  */
 
 public class AlertHelper {
-    private BaseActivity activity;
 
     private Alert alert;
-    public AlertHelper(BaseActivity activity) {
-        this.activity = activity;
+    public AlertHelper() {
 
     }
 
@@ -37,7 +40,9 @@ public class AlertHelper {
 
     public void showRewarded(final RewardResponse rewardResponse){
         try {
+            Activity activity = MainApplication.getCurrentActivity();
             if (activity == null) return;
+            LogUtil.d("ALERTER: showRewarded from " + activity.getLocalClassName());
             alert = Alerter.create(activity)
                     .setTitle("REWARD")
                     .setText(rewardResponse.getLog().getMessage())
@@ -57,7 +62,9 @@ public class AlertHelper {
 
     public void showCashedIn(final CashActionResponse cashActionResponse){
         try {
+            Activity activity = MainApplication.getCurrentActivity();
             if (activity == null) return;
+            LogUtil.d("ALERTER: showCashedIn from " + activity.getLocalClassName());
             alert = Alerter.create(activity)
                     .setTitle("CASHED IN")
                     .setText(cashActionResponse.getLog().getMessage())
@@ -77,7 +84,9 @@ public class AlertHelper {
 
     public void showCashedOut(final CashActionResponse cashActionResponse){
         try {
+            Activity activity = MainApplication.getCurrentActivity();
             if (activity == null) return;
+            LogUtil.d("ALERTER: showCashedOut from " + activity.getLocalClassName());
             alert = Alerter.create(activity)
                     .setTitle("CASHED OUT")
                     .setText(cashActionResponse.getLog().getMessage())
@@ -97,7 +106,11 @@ public class AlertHelper {
 
     public void showSentTMC(final CashActionResponse cashActionResponse){
         try {
+            Activity activity = MainApplication.getCurrentActivity();
             if (activity == null) return;
+            LogUtil.d("ALERTER: showSentTMC from " + activity.getLocalClassName());
+            /*if (activity instanceof SendTMCActivity)
+                ((SendTMCActivity)activity).onTMCSent(cashActionResponse);*/
             alert = Alerter.create(activity)
                     .setTitle("TMC SENT!")
                     .setText(cashActionResponse.getLog().getMessage())
@@ -117,7 +130,9 @@ public class AlertHelper {
 
     public void showReceivedTMC(final CashActionResponse cashActionResponse){
         try {
+            Activity activity = MainApplication.getCurrentActivity();
             if (activity == null) return;
+            LogUtil.d("ALERTER: showReceivedTMC from " + activity.getLocalClassName());
             alert = Alerter.create(activity)
                     .setTitle("TMC RECEIVED!")
                     .setText(cashActionResponse.getLog().getMessage())

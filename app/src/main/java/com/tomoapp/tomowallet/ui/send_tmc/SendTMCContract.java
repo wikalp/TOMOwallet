@@ -12,6 +12,8 @@ public interface SendTMCContract {
         void loadContent();
         void displayError(String error);
         void confirmTransfer(String address, Double value);
+        void onTransferring();
+
     }
 
 

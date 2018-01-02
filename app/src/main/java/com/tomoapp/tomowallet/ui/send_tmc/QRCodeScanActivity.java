@@ -14,6 +14,8 @@ import android.view.WindowManager;
 import com.dlazaro66.qrcodereaderview.QRCodeReaderView;
 import com.tomoapp.tomowallet.R;
 import com.tomoapp.tomowallet.base.BaseActivity;
+import com.tomoapp.tomowallet.base.BaseSocketActivity;
+import com.tomoapp.tomowallet.base.MainApplication;
 import com.tomoapp.tomowallet.helper.LogUtil;
 import com.tomoapp.tomowallet.helper.ToastUtil;
 
@@ -25,7 +27,7 @@ import butterknife.ButterKnife;
  */
 
 
-public class QRCodeScanActivity extends BaseActivity implements QRCodeReaderView.OnQRCodeReadListener {
+public class QRCodeScanActivity extends BaseSocketActivity implements QRCodeReaderView.OnQRCodeReadListener {
 
 
     @BindView(R.id.qrdecoderview)
@@ -49,6 +51,9 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeReaderView
         qrdecoderview.setOnQRCodeReadListener(this);
         requestPermission();
     }
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -142,6 +147,9 @@ public class QRCodeScanActivity extends BaseActivity implements QRCodeReaderView
     @Override
     protected void onResume() {
         super.onResume();
+        MainApplication.setCurrentActivity(this
+
+        );
         qrdecoderview.startCamera();
     }
 

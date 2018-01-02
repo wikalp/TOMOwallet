@@ -62,6 +62,7 @@ public class SendTMCPresenter implements SendTMCContract.Presenter {
 
     @Override
     public void performTransfer(String address, Double amount) {
+        mView.onTransferring();
         APIService.getInstance().build()
                 .transfer(mWallet.getAddress(), address, amount)
                 .enqueue(new Callback<JSONObject>() {
